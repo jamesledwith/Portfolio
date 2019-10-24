@@ -8,25 +8,41 @@ public class CollisionController : MonoBehaviour {
     public Text countText;
     public string levelToLoad;
     public GameObject scoreText;
+    public GameObject livesText;
+    public GameObject plane;
+    public float timeInTrigger = 3f;
 	// Use this for initialization
 	void Start () {
         scoreText = GameObject.Find("Score");
-        //count = 0;
+        livesText = GameObject.Find("Lives");
+        plane = GameObject.Find("Plane");
         }
 
     //Score system and collisions with game objects
     void OnCollisionEnter(Collision other)
     {
-        //C
-        //GameObject.Find("Spawner").GetComponent<Spawner>().spawned = false;
-        if (other.gameObject.name == "holeHit")
+        if (other.gameObject.tag == "Miss")
+        {
+            livesText.GetComponent<ScoreTracker>().lives = livesText.GetComponent<ScoreTracker>().lives - 1;
+            Debug.Log(gameObject.name + " has collided with " + other.gameObject.name);
+            GameObject.Find("Spawner").GetComponent<Spawner>().SpawnObjects();         
+            Destroy(this.gameObject);
+            plane.SetActive(true);
+        }
+
+        if (other.gameObject.tag == "Score")
         {
             scoreText.GetComponent<ScoreTracker>().score = scoreText.GetComponent<ScoreTracker>().score + 1;
-            Debug.Log(gameObject.name + " has collided with " + other.gameObject.name);
+            Debug.Log(gameObject.name + " has collided with " + other.gameObject.tag);
             GameObject.Find("Spawner").GetComponent<Spawner>().SpawnObjects();
             Destroy(this.gameObject);
         }
-        //else if (other.gameObject.tag == "Miss")
+        
+        else
+        {
+            Debug.Log("Spawner not working");
+        }
+            //else if (other.gameObject.tag == "Miss")
         //{
             //scoreText.GetComponent<ScoreTracker>().score = scoreText.GetComponent<ScoreTracker>().score - 1;
 
@@ -34,12 +50,92 @@ public class CollisionController : MonoBehaviour {
             //Destroy(this.gameObject);
         //}
     }
-   
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("GrabTimer"))
+        {
+            timeInTrigger = timeInTrigger - Time.deltaTime;
+            scoreText.GetComponent<ScoreTracker>().score = scoreText.GetComponent<ScoreTracker>().score + 1; 
+            plane.SetActive(false);
+        }
+    }
+    void OnTriggerStay(Collider other)
+    {
+        if (other.gameObject.CompareTag("GrabTimer"))
+        {
+            timeInTrigger = timeInTrigger - Time.deltaTime;
+
+            if (timeInTrigger <= 0.0f)
+            {
+                //GameObject.Find("Spawner").GetComponent<Spawner>().SpawnObjects();
+                plane.SetActive(true);
+                GameObject.Find("Spawner").GetComponent<Spawner>().SpawnObjects();
+                Destroy(this.gameObject);
+            }
+            
+        }
+    }
+    public void hitScore() {
+    }
+
+    public void hitMiss() { 
+        
+    }
+
+
 	void Update () 
     {
         //if (count >= 100) {LoadScene(); }  
 	}
 }
+
+/*if (other.gameObject.name == "holeHit")
+     {
+         hitScore();
+         scoreText.GetComponent<ScoreTracker>().score = scoreText.GetComponent<ScoreTracker>().score - 1;
+         Debug.Log(gameObject.name + " has collided with " + other.gameObject.name);
+         GameObject.Find("SpawnerTwo").GetComponent<Spawner>().SpawnObjects();
+         this.num = Random.Range(0, 3);
+         Destroy(this.gameObject);
+     } 
+     if (other.gameObject.name == "holeHit")
+     {
+         hitScore();
+         scoreText.GetComponent<ScoreTracker>().score = scoreText.GetComponent<ScoreTracker>().score - 1;
+         Debug.Log(gameObject.name + " has collided with " + other.gameObject.name);
+         GameObject.Find("SpawnerThree").GetComponent<Spawner>().SpawnObjects();
+         this.num = Random.Range(0, 3);
+         Destroy(this.gameObject);
+     }
+
+     if (other.gameObject.tag == "Score" && num == 1)
+     {
+         scoreText.GetComponent<ScoreTracker>().score = scoreText.GetComponent<ScoreTracker>().score + 1;
+         Debug.Log(gameObject.name + " has collided with " + other.gameObject.tag);
+         GameObject.Find("Spawner").GetComponent<Spawner>().SpawnObjects();
+         this.num = Random.Range(0, 3);
+         Destroy(this.gameObject);
+     }
+     if (other.gameObject.tag == "Score" && num == 2)
+     {
+         scoreText.GetComponent<ScoreTracker>().score = scoreText.GetComponent<ScoreTracker>().score + 1;
+         Debug.Log(gameObject.name + " has collided with " + other.gameObject.tag);
+         GameObject.Find("SpawnerTwo").GetComponent<Spawner>().SpawnObjects();
+         this.num = Random.Range(0, 3);
+         Destroy(this.gameObject);
+     }
+     if (other.gameObject.tag == "Score" && num == 3)
+     {
+         scoreText.GetComponent<ScoreTracker>().score = scoreText.GetComponent<ScoreTracker>().score + 1;
+         Debug.Log(gameObject.name + " has collided with " + other.gameObject.tag);
+         GameObject.Find("SpawnerThree").GetComponent<Spawner>().SpawnObjects();
+         this.num = Random.Range(0, 3);
+         Destroy(this.gameObject);
+     }*/
+
+
+
 
 
 /*public void LoadScene ()

@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/finalDemo.unity
+- path: Assets/Myscenes/ballSlopeL1.unity
   isLoaded: 1
   isActive: 1

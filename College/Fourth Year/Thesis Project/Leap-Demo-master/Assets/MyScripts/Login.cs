@@ -8,12 +8,20 @@ using UnityEngine.SceneManagement;
 public class Login : MonoBehaviour {
 	public GameObject username;
 	public GameObject password;
-	private string Username;
+	public static string Username;
 	private string Password;
 	private String[] Lines;
 	private string DecryptedPass;
     private string sPass;
+    private string forms;
 
+
+
+    public static String GetTimestamp(DateTime value)
+    {
+        return value.ToString("ddMMyyyyHHmmss");
+        //return value.ToString("dd/MM/yyyy HH:mm:ss");
+    }
 	public void LoginButton()
     {
 		bool UN = false; //username
@@ -74,8 +82,16 @@ public class Login : MonoBehaviour {
 
 		if (UN == true && PW == true)
         {
+            String timeStamp = GetTimestamp(DateTime.Now);
 			username.GetComponent<InputField>().text = "";
-			password.GetComponent<InputField>().text = "";	
+			password.GetComponent<InputField>().text = "";
+
+            //forms = (Username + Environment.NewLine + Email + Environment.NewLine + Password);
+           // System.IO.File.WriteAllText(@"D:\UnityUsers\" + Username + ".txt", forms);
+
+            forms = (timeStamp  + Environment.NewLine + Username);
+            System.IO.File.WriteAllText(@"D:\Login\" + timeStamp + ".txt",forms);
+			
 			print ("Login Sucessful");
             SceneManager.LoadScene("Start Menu");
 		}
